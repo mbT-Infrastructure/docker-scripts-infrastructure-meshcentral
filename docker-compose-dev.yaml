@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+
+    scripts-infrastructure-meshcentral:
+        container_name: scripts-infrastructure-meshcentral
+        build: .
+        command: test-connection.sh
+        environment:
+            - SERVER_URL=
+            - SERVER_USERNAME=
+            - SERVER_PASSWORD=
+        volumes:
+            - "./data-local:/media/workdir"
