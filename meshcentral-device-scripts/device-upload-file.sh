@@ -53,16 +53,16 @@ DEVICE_ID="$(node meshctrl --loginuser "$SERVER_USERNAME" \
     sed "s|^\([^,]*,\)\{2\}\"\([^\"]*\)\"\(,[^,]*\)\{4\}|\2|")"
 for ATTEMPT in {1..10}; do
     UPLOAD_RESULT=\"$(node meshctrl --loginuser "$SERVER_USERNAME" --loginpass "$SERVER_PASSWORD" \
-        --url "$SERVER_URL" Upload --id "$DEVICE_ID" --file "/media/workdir/$(basename "$FILE")" \
+        --url "$SERVER_URL" Upload --id "$DEVICE_ID" --file "$FILE" \
         --target "$TARGET")\"
     if [[ "$UPLOAD_RESULT" != *'Upload done'* ]]; then
         echo "Attempt ${ATTEMPT}: Failed to upload file."
         echo "$UPLOAD_RESULT"
+        if [[ "$ATTEMPT" -eq 10 ]]; then
+            exit 1
+        fi
         sleep 5
     else
         break;
     fi
 done
-node meshctrl --loginuser "$SERVER_USERNAME" --loginpass "$SERVER_PASSWORD" \
-    --url "$SERVER_URL" Upload --id "$DEVICE_ID" --file "/media/workdir/$(basename "$FILE")" \
-    --target "$TARGET"
