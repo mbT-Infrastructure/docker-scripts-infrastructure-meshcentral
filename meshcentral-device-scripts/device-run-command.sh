@@ -44,7 +44,7 @@ node meshctrl --loginuser "$SERVER_USERNAME" --loginpass "$SERVER_PASSWORD" \
     "bash -c \"(${COMMAND[*]} && echo finishedRunCommand || echo failedRunCommand) &> \
         /tmp/meshcentral-run-on-device.log\""
 echo "Started command \"${COMMAND}\""
-touch meshcentral-run-on-device.log
+echo > meshcentral-run-on-device.log
 while ! (tail -n 1 < meshcentral-run-on-device.log | grep finishedRunCommand > /dev/null); do
     sleep 3
     for ATTEMPT in {1..10}; do
@@ -64,6 +64,7 @@ while ! (tail -n 1 < meshcentral-run-on-device.log | grep finishedRunCommand > /
     mv meshcentral-run-on-device-new.log meshcentral-run-on-device.log
     (tail -n 1 < meshcentral-run-on-device.log | grep failedRunCommand > /dev/null) && exit 1
 done
+rm meshcentral-run-on-device.log
 node meshctrl --loginuser "$SERVER_USERNAME" --loginpass "$SERVER_PASSWORD" \
     --url "$SERVER_URL" RunCommand --id "$DEVICE_ID" --run \
     "rm /tmp/meshcentral-run-on-device.log"
