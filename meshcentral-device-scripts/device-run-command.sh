@@ -68,4 +68,4 @@ rm meshcentral-run-on-device.log
 node meshctrl --loginuser "$SERVER_USERNAME" --loginpass "$SERVER_PASSWORD" \
     --url "$SERVER_URL" RunCommand --id "$DEVICE_ID" --run \
     "rm /tmp/meshcentral-run-on-device.log"
-sleep 3
+sleep 5
