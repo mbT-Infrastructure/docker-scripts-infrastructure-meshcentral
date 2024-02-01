@@ -20,7 +20,7 @@ jobs:
                       docker run --pull always --rm \
                           --volume "/media/saved-cache:/media/saved-cache" \
                           --volume "docker-scripts-infrastructure-meshcentral\
-                  -build-cache:/media/build-cache" \
+                  -build-cache:\/media/build-cache" \
                           madebytimo/scripts \
                           bash \
                       << EOF

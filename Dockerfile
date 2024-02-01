@@ -4,7 +4,7 @@ WORKDIR /root/builder
 
 RUN download.sh --name scripts-infrastructure.tar.gz \
         https://github.com/mbT-Infrastructure/scripts-infrastructure/archive/refs/heads/\
-feature/install-scripts.tar.gz \
+main.tar.gz \
     && compress.sh --decompress scripts-infrastructure.tar.gz \
     && mv scripts-infrastructure-*/scripts scripts-infrastructure \
     && rm -r scripts-infrastructure-*/ scripts-infrastructure.tar.gz
