@@ -9,8 +9,7 @@ main.tar.gz \
     && mv scripts-infrastructure-*/scripts scripts-infrastructure \
     && rm -r scripts-infrastructure-*/ scripts-infrastructure.tar.gz
 
-# v0.0.1 cause of meshctrl bug in newer version
-FROM madebytimo/meshcentral:v0.0.1
+FROM madebytimo/meshcentral
 RUN ln --symbolic /app /opt/meshcentral
 
 RUN install-autonomous.sh install Scripts \
