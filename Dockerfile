@@ -12,7 +12,7 @@ main.tar.gz \
 FROM madebytimo/meshcentral
 RUN ln --symbolic /app /opt/meshcentral
 
-RUN install-autonomous.sh install Scripts \
+RUN install-autonomous.sh install Basics Scripts \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /root/builder/scripts-infrastructure/* /usr/local/bin
