@@ -46,7 +46,7 @@ fi
 
 cd /opt/meshcentral/node_modules/meshcentral
 
-echo "Upload file \"${FILE}\" to \"${TARGET}\" on \"${DEVICE}\""
+echo "Upload file \"${FILE}\" to \"${TARGET}\" on \"${DEVICE}\"."
 DEVICE_ID="$(node meshctrl --loginuser "$SERVER_USERNAME" \
         --loginpass "$SERVER_PASSWORD" --url "$SERVER_URL" \
         ListDevices --filter "^${DEVICE}\$" --csv | \
