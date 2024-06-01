@@ -14,7 +14,7 @@ done
 
 cd /opt/meshcentral/node_modules/meshcentral
 
-echo "Test connection to \"${SERVER_URL}\""
+echo "Test connection to \"${SERVER_URL}\"."
 SERVERINFO="$(node meshctrl --loginuser "$SERVER_USERNAME" \
     --loginpass "$SERVER_PASSWORD" --url "$SERVER_URL" serverinfo)"
 echo "$SERVERINFO"

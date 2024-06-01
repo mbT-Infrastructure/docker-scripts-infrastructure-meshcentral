@@ -35,37 +35,14 @@ done
 
 cd /opt/meshcentral/node_modules/meshcentral
 
+echo "Run command on \"${DEVICE}\"."
 DEVICE_ID="$(node meshctrl --loginuser "$SERVER_USERNAME" \
         --loginpass "$SERVER_PASSWORD" --url "$SERVER_URL" \
         ListDevices --filter "^${DEVICE}\$" --csv | \
     sed "s|^\([^,]*,\)\{2\}\"\([^\"]*\)\"\(,[^,]*\)\{4\}|\2|")"
 node meshctrl --loginuser "$SERVER_USERNAME" --loginpass "$SERVER_PASSWORD" \
-    --url "$SERVER_URL" RunCommand --id "$DEVICE_ID" --run \
-    "bash -c \"(${COMMAND[*]} && echo finishedRunCommand || echo failedRunCommand) &> \
-        /tmp/meshcentral-run-on-device.log\""
-echo "Started command \"${COMMAND}\""
-echo > meshcentral-run-on-device.log
-while ! (tail -n 1 < meshcentral-run-on-device.log | grep finishedRunCommand > /dev/null); do
-    sleep 3
-    for ATTEMPT in {1..10}; do
-        node meshctrl --loginuser "$SERVER_USERNAME" \
-            --loginpass "$SERVER_PASSWORD" --url "$SERVER_URL" Download \
-            --id "$DEVICE_ID" --file /tmp/meshcentral-run-on-device.log \
-            --target meshcentral-run-on-device-new.log \
-            > /dev/null
-        if [[ ! -f meshcentral-run-on-device-new.log ]]; then
-            echo "Attempt ${ATTEMPT}: Failed to download new status."
-            sleep 5
-        else
-            break;
-        fi
-    done
-    comm -3 --nocheck-order meshcentral-run-on-device.log meshcentral-run-on-device-new.log
-    mv meshcentral-run-on-device-new.log meshcentral-run-on-device.log
-    (tail -n 1 < meshcentral-run-on-device.log | grep failedRunCommand > /dev/null) && exit 1
-done
-rm meshcentral-run-on-device.log
-node meshctrl --loginuser "$SERVER_USERNAME" --loginpass "$SERVER_PASSWORD" \
-    --url "$SERVER_URL" RunCommand --id "$DEVICE_ID" --run \
-    "rm /tmp/meshcentral-run-on-device.log"
-sleep 5
+    --url "$SERVER_URL" RunCommand --id "$DEVICE_ID" --reply --run \
+    "bash -c \"${COMMAND[*]} || echo -n failedRunCommand\"" \
+        | tee /proc/1/fd/1 \
+        | tail --lines 1 \
+        | grep --invert-match --silent failedRunCommand
