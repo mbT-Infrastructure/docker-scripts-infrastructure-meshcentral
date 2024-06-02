@@ -36,13 +36,16 @@ done
 cd /opt/meshcentral/node_modules/meshcentral
 
 echo "Run command on \"${DEVICE}\"."
+
 DEVICE_ID="$(node meshctrl --loginuser "$SERVER_USERNAME" \
         --loginpass "$SERVER_PASSWORD" --url "$SERVER_URL" \
         ListDevices --filter "^${DEVICE}\$" --csv | \
     sed "s|^\([^,]*,\)\{2\}\"\([^\"]*\)\"\(,[^,]*\)\{4\}|\2|")"
+mkfifo output
 node meshctrl --loginuser "$SERVER_USERNAME" --loginpass "$SERVER_PASSWORD" \
     --url "$SERVER_URL" RunCommand --id "$DEVICE_ID" --reply --run \
     "bash -c \"${COMMAND[*]} || echo -n failedRunCommand\"" \
-        | tee /proc/1/fd/1 \
-        | tail --lines 1 \
-        | grep --invert-match --silent failedRunCommand
+        | tee output &
+tail --lines 1 < output \
+    | grep --invert-match --silent failedRunCommand
+rm output
