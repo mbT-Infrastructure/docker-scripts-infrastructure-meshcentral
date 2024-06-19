@@ -30,6 +30,11 @@ done
 
 cd /opt/meshcentral/node_modules/meshcentral
 
+if [[ "$SKIP_REBOOT" == "true" ]]; then
+    echo "SKIP_REBOOT is set to true. Skip reboot of \"${DEVICE}\"."
+    exit
+fi
+
 echo "Reboot \"${DEVICE}\""
 DEVICE_ID="$(node meshctrl --loginuser "$SERVER_USERNAME" \
         --loginpass "$SERVER_PASSWORD" --url "$SERVER_URL" \
