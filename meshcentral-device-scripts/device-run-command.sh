@@ -44,7 +44,7 @@ DEVICE_ID="$(node meshctrl --loginuser "$SERVER_USERNAME" \
 mkfifo output
 node meshctrl --loginuser "$SERVER_USERNAME" --loginpass "$SERVER_PASSWORD" \
     --url "$SERVER_URL" RunCommand --id "$DEVICE_ID" --reply --run \
-    "bash -c \"${COMMAND[*]} || echo -n failedRunCommand\"" \
+    "bash -c '( ${COMMAND[*]//"'"/"\'"} ) || echo -n failedRunCommand'" \
         | tee output &
 tail --lines 1 < output \
     | grep --invert-match --silent failedRunCommand
